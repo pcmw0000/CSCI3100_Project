@@ -1,0 +1,21 @@
+# Environment
+.env
+.env.local
+
+
+node_modules/
+
+# log
+*.log
+logs/
+
+# IDE 
+.vscode/
+.idea/
+
+
+tmp/
+temp/
+
+# Database
+*.db
