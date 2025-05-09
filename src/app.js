@@ -16,7 +16,7 @@ const server = http.createServer(app);
 // Single CORS configuration
 // In CORS configuration
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000', // Add fallback
+  origin: 'http://127.0.0.1:5500', // Add fallback
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
