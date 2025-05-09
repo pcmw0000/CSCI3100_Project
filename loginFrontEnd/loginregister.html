@@ -17,14 +17,14 @@
             <span class="icon-close"><ion-icon name="close-outline"></ion-icon></span>
            <div class="form-box login">
                 <h1>Login</h1>
-                <form action="#">
+                <form id="loginForm" action="#">
                     <div class="input-box">
                         
-                        <input type="text" placeholder="Username" required>
+                        <input type="text" id="loginUsername" placeholder="Username" required>
                         <i class='bx bxs-user'></i>
                     </div>
                     <div class="input-box">
-                        <input type="password" placeholder="Password" required>
+                        <input type="password" id="loginPassword" placeholder="Password" required>
                         <i class='bx bx-lock-alt' ></i>
                     </div>
                     <div class="remember-forgot">
@@ -42,20 +42,30 @@
 
             <div class="form-box register">
                 <h1>Registration</h1>
-                <form action="#">
+                <form id="registerForm" action="#">
                     <div class="input-box">
                         
-                        <input type="text" placeholder="Username" required>
+                        <input type="text" id="registerUsername" placeholder="Username" required>
                         <i class='bx bxs-user'></i>
                     </div>
                     <div class="input-box">
-                        <input type="password" placeholder="Password" required>
+                        <input type="password" id="registerPassword" placeholder="Password" required>
                         <i class='bx bx-lock-alt' ></i>
                     </div>
     
                     <div class="input-box">
-                        <input type="password" placeholder=" Confirm password" required>
+                        <input type="password" id="confirmPassword" placeholder=" Confirm password" required>
                         <i class='bx bx-lock-alt' ></i>
+                    </div>
+
+                    <div class="input-box">
+                        <input type="text" id="countryId" placeholder="Country ID" required>
+                        <i class='bx bxs-globe'></i>
+                    </div>
+                    
+                    <div class="input-box">
+                        <input type="text" id="role" value="manager" readonly>
+                        <i class='bx bxs-user'></i>
                     </div>
     
                     <div class="remember-forgot">
@@ -76,7 +86,7 @@
     </div>
 
     </section>
-    <script src="script.js"></script>
+    <script src="scriptLoginRegister.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script> 
 </body>
