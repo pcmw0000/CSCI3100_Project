@@ -5,11 +5,7 @@ const purgeOldMessages = async () => {
   try {
     await sequelize.query(`
       DELETE FROM Messages
-      WHERE id NOT IN (
-        SELECT id FROM Messages
-        ORDER BY createdAt DESC
-        LIMIT 50
-      )
+      WHERE createdAt < DATE_SUB(NOW(), INTERVAL 1 HOUR)
     `);
     console.log('Old messages purged at', new Date());
   } catch (error) {

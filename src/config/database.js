@@ -2,11 +2,11 @@ const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME || 'csci3100',
-  process.env.DB_USER || 'admin1',
-  process.env.DB_PASSWORD || 'admin1', {
-    host: process.env.DB_HOST || '59.188.174.92',
-    port: process.env.DB_PORT || 3306,
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD, {
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
     dialect: 'mysql',
     dialectOptions: {
       connectTimeout: 60000, // 60 seconds timeout

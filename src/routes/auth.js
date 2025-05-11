@@ -2,12 +2,17 @@ const express = require('express');
 const router = express.Router();
 const { hashPassword, verifyPassword } = require('../services/auth');
 const { generateToken } = require('../services/jwt');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const License = require('../models/License');
+const redis = require('../config/redis');
+const authenticateToken = require('../middlewares/authenticateToken');
+const Country = require('../models/Country');
 
 // User registration endpoint
 router.post('/register', async (req, res) => {
   try {
-    const { username, password, countryid, role } = req.body;
+    const { username, password, countryid, role, licenseKey } = req.body;
 
     // --------------------------
     // Password complexity validation
@@ -27,8 +32,18 @@ router.post('/register', async (req, res) => {
       if (adminExists) {
         return res.status(400).json({ error: 'An admin already exists in the system' });
       }
+      // Enforce countryid = 0 for admin
+      if (countryid !== 0) {
+          return res.status(400).json({ error: 'Admin must use countryid = 0' });
+  }
+    else {
+      // Validate manager’s countryid is one of the 14 valid IDs
+      const country = await Country.findByPk(countryid);
+      if (!country) {
+          return res.status(400).json({ error: 'Invalid country selection' });
+  }
     }
-
+  }
     // --------------------------
     // Manager quota validation
     // --------------------------
@@ -52,6 +67,28 @@ router.post('/register', async (req, res) => {
     }
 
     // --------------------------
+    // License check
+    // --------------------------
+    if (!licenseKey) {
+      return res.status(400).json({ error: 'License key is required for registration' });
+    }
+
+    // Verify the license key exists and is not already used
+    const license = await License.findOne({ where: { key: licenseKey, isUsed: false } });
+    if (!license) {
+      return res.status(400).json({ error: 'Invalid or already used license key' });
+    }
+
+    // If the license is a subscription type, check if it is expired
+    if (
+      license.type === 'subscription' && 
+      license.expirationDate && 
+      new Date(license.expirationDate) < new Date()
+    ) {
+      return res.status(400).json({ error: 'License key has expired' });
+    }
+
+    // --------------------------
     // Create user
     // --------------------------
     const hashedPassword = await hashPassword(password);
@@ -59,8 +96,13 @@ router.post('/register', async (req, res) => {
       username,
       password: hashedPassword,
       role,
-      countryid
+      countryid,
+      licenseKey
     });
+
+    // Mark the license as used, so it can't be reused by another account
+    license.isUsed = true;
+    await license.save();
 
     res.status(201).json({ message: 'User registered successfully' });
 
@@ -101,6 +143,17 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+// User Logout Route: Stateless logout – simply instruct client to delete the token.
+router.post('/logout', authenticateToken, async (req, res) => {
+  try {
+    // No blacklist. Server does not track logout.
+    // Client is responsible for deleting token on its side.
+    res.json({ message: 'Logged out successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Logout failed' });
   }
 });
 

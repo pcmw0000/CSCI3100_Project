@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authenticateToken = require('../middlewares/auth');
 const Country = require('../models/Country');
+const { body, validationResult } = require('express-validator');
 
 router.get('/', authenticateToken, async (req, res) => {
   try {

@@ -2,19 +2,23 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 const Message = sequelize.define('Message', {
-  content: { 
-    type: DataTypes.TEXT, 
-    allowNull: false 
+  messageid: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
   },
   username: { // Changed from userid to username
     type: DataTypes.STRING(45),
     allowNull: false
   },
-  is_archived: { 
-    type: DataTypes.BOOLEAN, 
-    defaultValue: false 
-  }
+  content: {
+    type: DataTypes.TEXT,
+    allowNull: false
+  },   
 }, { 
+  tableName:'Chat',
+  createdAt: 'create_at',
+  updatedAt: false,
   timestamps: true,
   indexes: [
     {

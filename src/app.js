@@ -7,8 +7,10 @@ const initChat = require('./routes/chatSocket');
 const authRoutes = require('./routes/auth');
 const countryRoutes = require('./routes/countries');
 const chatRoutes = require('./routes/chat');
+const licenseRoutes = require('./routes/license');
 const purgeMessages = require('./cron/purgeMessages');
 const rateLimit = require('./middlewares/rateLimit');
+const licenseCheck = require('./middlewares/licenseCheck');
 
 const app = express();
 const server = http.createServer(app);
@@ -29,8 +31,9 @@ app.use('/api/auth', rateLimit);
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/countries', countryRoutes);
-app.use('/api/chat', chatRoutes);
+app.use('/api/licenses', licenseRoutes);
+app.use('/api/countries', authenticateToken, licenseCheck, countryRoutes);
+app.use('/api/chat', authenticateToken, licenseCheck, chatRoutes);
 
 // Database connection check
 sequelize.sync()
