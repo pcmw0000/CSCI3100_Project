@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chatroom</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <!-- Use dynamic URLs to avoid hardcoding -->
+  <script defer src="/socket.io/socket.io.js"></script>
+  <script defer src="/js/chat.js"></script>
+  <script>
+    // Inject JWT and user data from the backend
+    const jwtToken = "<%= jwt %>";
+    const currentUser = {
+      username: "<%= user.username %>",
+      role: "<%= user.role %>",
+      countryid: "<%= user.countryid %>"
+    };
+  </script>
+</head>
+<body>
+  <div id="map-container"><!-- Map visualization module --></div>
+  <div id="chat-container">
+    <div id="message-container"></div>
+    <form id="message-form">
+      <input type="text" id="message-input" placeholder="Type message...">
+      <button type="submit">Send</button>
+    </form>
+  </div>
+</body>
+</html>
